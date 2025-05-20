@@ -5,7 +5,7 @@ let goals = [
    {
         id: 1,
         name: 'Goals 1',
-        description: 'Description for Task 1'
+        description: 'Description for Goals 1'
     },
     {
         id: 2,
