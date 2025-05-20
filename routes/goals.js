@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-let tasks = [
-    {
+let goals = [
+   {
         id: 1,
         name: 'Goals 1',
         description: 'Description for Task 1'
@@ -19,27 +19,29 @@ let tasks = [
     }
 ];
 
-router.get('/getGoals', function(req, res, next){
+router.get('/getGoals', function(req, res, next) {
     res.json(goals);
-})
+});
 
-router.post('/addGoal', function(req, res, next){
-    let timestamp = Date.now() + Math.random();
-    if(req.body && req.body.name && req.body.description && req.body.dueDate){
-        req.body.id = timestamp.toString();
-        goals.push(req.body);
+router.delete('/deleteGoal/:id', function(req, res, next) {
+    const goalId = parseInt(req.params.id);
+    const goal = goals.find(goal => goal.id !== goalId);
+    if(!goal) {
+        return res.status(400).json({ message: 'Goal not found'});
+    } else {
+        goals = goals.filter(goal => goal.id !== goalId);
+        res.status(200).json({ message: 'Goal deleted successfully'});
     }
-    res.json(goals);
-})
+});
 
-router.delete('/removeGoal/:id', function(req, res, next){
-    if(req.params&& req.params.id){
-        let id = req.params.id;
-        goals = goals.filter(goal => goal.id !== id);
-        res.json(goals);
-    }else{
-        res.json([{}]);
-    }
-})
+router.post('/addGoal', function(req, res, next) {
+    const newGoal = {
+        id: goals.length + 1,
+        name: req.body.name,
+        description: req.body.description
+    };
+    goals.push(newGoal);
+    req.status(200).json({ message: 'Goal added successfully' });
+});
 
 module.exports = router;
